@@ -14,15 +14,7 @@ builder.Services.AddSwaggerGen(options =>
         options.IncludeXmlComments(xmlPath);
     }
 });
-builder.Services.AddHttpClient<IOpenDotaLeagueService, OpenDotaLeagueService>(client =>
-{
-    client.BaseAddress = new Uri("https://api.opendota.com");
-});
-builder.Services.AddHttpClient<IOpenDotaMatchesService, OpenDotaMatchesService>(client =>
-{
-    client.BaseAddress = new Uri("https://api.opendota.com");
-});
-builder.Services.AddHttpClient<IOpenDotaTeamsService, OpenDotaTeamsService>(client =>
+builder.Services.AddHttpClient<IOpenDotaService, OpenDotaService>(client =>
 {
     client.BaseAddress = new Uri("https://api.opendota.com");
 });

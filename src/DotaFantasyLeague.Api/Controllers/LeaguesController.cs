@@ -11,15 +11,15 @@ namespace DotaFantasyLeague.Api.Controllers;
 [Route("api/[controller]")]
 public class LeaguesController : ControllerBase
 {
-    private readonly IOpenDotaLeagueService _leagueService;
+    private readonly IOpenDotaService _openDotaService;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="LeaguesController"/> class.
     /// </summary>
-    /// <param name="leagueService">Service used to retrieve league information.</param>
-    public LeaguesController(IOpenDotaLeagueService leagueService)
+    /// <param name="openDotaService">Service used to retrieve league information.</param>
+    public LeaguesController(IOpenDotaService openDotaService)
     {
-        _leagueService = leagueService;
+        _openDotaService = openDotaService;
     }
 
     /// <summary>
@@ -33,7 +33,7 @@ public class LeaguesController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<IReadOnlyList<LeagueMatch>>> GetMatches(long leagueId, CancellationToken cancellationToken)
     {
-        var matches = await _leagueService.GetMatchesAsync(leagueId, cancellationToken);
+        var matches = await _openDotaService.GetMatchesAsync(leagueId, cancellationToken);
         return Ok(matches);
     }
 
@@ -48,7 +48,7 @@ public class LeaguesController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<IReadOnlyList<string>>> GetMatchIds(long leagueId, CancellationToken cancellationToken)
     {
-        var matchIds = await _leagueService.GetMatchIdsAsync(leagueId, cancellationToken);
+        var matchIds = await _openDotaService.GetMatchIdsAsync(leagueId, cancellationToken);
         return Ok(matchIds);
     }
 }
