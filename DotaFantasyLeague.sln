@@ -2,7 +2,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31912.275
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotaFantasyLeague.Api", "src\DotaFantasyLeague.Api\DotaFantasyLeague.Api.csproj", "{F4F632E0-4016-4054-8E67-AF1E626961DE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotaFantasyLeague.Api", "src\\DotaFantasyLeague.Api\\DotaFantasyLeague.Api.csproj", "{F4F632E0-4016-4054-8E67-AF1E626961DE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotaFantasyLeague.Api.IntegrationTests", "tests\\DotaFantasyLeague.Api.IntegrationTests\\DotaFantasyLeague.Api.IntegrationTests.csproj", "{5CEB1650-3A23-49BB-8C86-26353AA397A3}"
 EndProject
 Global
 GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -14,6 +16,10 @@ GlobalSection(ProjectConfigurationPlatforms) = postSolution
 {F4F632E0-4016-4054-8E67-AF1E626961DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 {F4F632E0-4016-4054-8E67-AF1E626961DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 {F4F632E0-4016-4054-8E67-AF1E626961DE}.Release|Any CPU.Build.0 = Release|Any CPU
+{5CEB1650-3A23-49BB-8C86-26353AA397A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+{5CEB1650-3A23-49BB-8C86-26353AA397A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+{5CEB1650-3A23-49BB-8C86-26353AA397A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+{5CEB1650-3A23-49BB-8C86-26353AA397A3}.Release|Any CPU.Build.0 = Release|Any CPU
 EndGlobalSection
 GlobalSection(SolutionProperties) = preSolution
 HideSolutionNode = FALSE
