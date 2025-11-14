@@ -1,0 +1,23 @@
+@inherits LayoutComponentBase
+
+<HeadContent>
+    <link rel="stylesheet" href="css/app.css" />
+</HeadContent>
+
+<div class="app-shell">
+    <header class="app-header">
+        <div class="container d-flex justify-content-between align-items-center py-3">
+            <a class="app-brand" href="/">Dota Fantasy League</a>
+        </div>
+    </header>
+
+    <main class="app-content">
+        @Body
+    </main>
+
+    <footer class="app-footer">
+        <div class="container py-3 text-muted">
+            &copy; @DateTime.UtcNow.Year Dota Fantasy League
+        </div>
+    </footer>
+</div>

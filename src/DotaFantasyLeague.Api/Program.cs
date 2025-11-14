@@ -1,4 +1,5 @@
 using System.Reflection;
+using DotaFantasyLeague.Api.Components;
 using DotaFantasyLeague.Api.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -27,6 +28,9 @@ builder.Services.AddHttpClient<IOpenDotaTeamsService, OpenDotaTeamsService>(clie
     client.BaseAddress = new Uri("https://api.opendota.com");
 });
 
+builder.Services.AddRazorComponents()
+    .AddInteractiveServerComponents();
+
 builder.Services.AddControllers();
 
 var app = builder.Build();
@@ -44,8 +48,13 @@ else
 
 app.UseHttpsRedirection();
 
+app.UseStaticFiles();
+
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.MapRazorComponents<App>()
+    .AddInteractiveServerRenderMode();
 
 app.Run();
