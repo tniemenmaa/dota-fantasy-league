@@ -11,15 +11,15 @@ namespace DotaFantasyLeague.Api.Controllers;
 [Route("api/[controller]")]
 public class TeamsController : ControllerBase
 {
-    private readonly IOpenDotaTeamsService _teamsService;
+    private readonly IOpenDotaService _openDotaService;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="TeamsController"/> class.
     /// </summary>
-    /// <param name="teamsService">Service used to retrieve team information.</param>
-    public TeamsController(IOpenDotaTeamsService teamsService)
+    /// <param name="openDotaService">Service used to retrieve team information.</param>
+    public TeamsController(IOpenDotaService openDotaService)
     {
-        _teamsService = teamsService;
+        _openDotaService = openDotaService;
     }
 
     /// <summary>
@@ -33,7 +33,7 @@ public class TeamsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<IReadOnlyList<TeamPlayer>>> GetPlayers(long teamId, CancellationToken cancellationToken)
     {
-        var players = await _teamsService.GetPlayersAsync(teamId, cancellationToken);
+        var players = await _openDotaService.GetPlayersAsync(teamId, cancellationToken);
         return Ok(players);
     }
 }

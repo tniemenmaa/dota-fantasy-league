@@ -11,15 +11,15 @@ namespace DotaFantasyLeague.Api.Controllers;
 [Route("api/[controller]")]
 public class MatchesController : ControllerBase
 {
-    private readonly IOpenDotaMatchesService _matchesService;
+    private readonly IOpenDotaService _openDotaService;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="MatchesController"/> class.
     /// </summary>
-    /// <param name="matchesService">Service used to retrieve match details.</param>
-    public MatchesController(IOpenDotaMatchesService matchesService)
+    /// <param name="openDotaService">Service used to retrieve match details.</param>
+    public MatchesController(IOpenDotaService openDotaService)
     {
-        _matchesService = matchesService;
+        _openDotaService = openDotaService;
     }
 
     /// <summary>
@@ -33,7 +33,7 @@ public class MatchesController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<MatchDetails>> GetMatch(long matchId, CancellationToken cancellationToken)
     {
-        var match = await _matchesService.GetMatchAsync(matchId, cancellationToken);
+        var match = await _openDotaService.GetMatchAsync(matchId, cancellationToken);
         return Ok(match);
     }
 }
