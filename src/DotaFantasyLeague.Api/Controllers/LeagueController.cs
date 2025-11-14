@@ -1,0 +1,39 @@
+using DotaFantasyLeague.Api.Models;
+using DotaFantasyLeague.Api.Services;
+using Microsoft.AspNetCore.Mvc;
+
+namespace DotaFantasyLeague.Api.Controllers;
+
+/// <summary>
+/// Provides operations for working with Dota leagues.
+/// </summary>
+[ApiController]
+[Route("api/[controller]")]
+public class LeagueController : ControllerBase
+{
+    private readonly IOpenDotaLeagueService _leagueService;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="LeagueController"/> class.
+    /// </summary>
+    /// <param name="leagueService">Service used to retrieve league information.</param>
+    public LeagueController(IOpenDotaLeagueService leagueService)
+    {
+        _leagueService = leagueService;
+    }
+
+    /// <summary>
+    /// Retrieves all matches associated with the provided league identifier.
+    /// </summary>
+    /// <param name="leagueId">Identifier of the league.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>A collection of matches sourced from the OpenDota API.</returns>
+    [HttpGet("{leagueId:long}/matches")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult<IReadOnlyList<LeagueMatch>>> GetMatches(long leagueId, CancellationToken cancellationToken)
+    {
+        var matches = await _leagueService.GetMatchesAsync(leagueId, cancellationToken);
+        return Ok(matches);
+    }
+}
