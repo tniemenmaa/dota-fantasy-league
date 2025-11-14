@@ -62,4 +62,40 @@ public class OpenDotaLeagueService : IOpenDotaLeagueService
             throw;
         }
     }
+
+    /// <inheritdoc />
+    public async Task<IReadOnlyList<string>> GetMatchIdsAsync(long leagueId, CancellationToken cancellationToken = default)
+    {
+        var requestUri = $"/api/leagues/{leagueId}/matchIds";
+
+        try
+        {
+            using var request = new HttpRequestMessage(HttpMethod.Get, requestUri);
+            request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+            using var response = await _httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var error = $"Failed to retrieve match IDs for league {leagueId}. Status code: {response.StatusCode}";
+                _logger.LogError(error);
+                throw new HttpRequestException(error);
+            }
+
+            await using var contentStream = await response.Content.ReadAsStreamAsync(cancellationToken);
+            var matchIds = await JsonSerializer.DeserializeAsync<List<string>>(contentStream, SerializerOptions, cancellationToken);
+
+            return matchIds ?? [];
+        }
+        catch (OperationCanceledException)
+        {
+            _logger.LogWarning("Fetching match IDs for league {LeagueId} was canceled.", leagueId);
+            throw;
+        }
+        catch (JsonException jsonException)
+        {
+            _logger.LogError(jsonException, "Failed to deserialize match IDs for league {LeagueId}.", leagueId);
+            throw;
+        }
+    }
 }
