@@ -49,7 +49,7 @@ public class OpenDotaLeagueService : IOpenDotaLeagueService
             await using var contentStream = await response.Content.ReadAsStreamAsync(cancellationToken);
             var matches = await JsonSerializer.DeserializeAsync<List<LeagueMatch>>(contentStream, SerializerOptions, cancellationToken);
 
-            return matches ?? Array.Empty<LeagueMatch>();
+            return matches ?? [];
         }
         catch (OperationCanceledException)
         {
