@@ -57,7 +57,7 @@ public class OpenDotaService : IOpenDotaService
     }
 
     /// <inheritdoc />
-    public async Task<IReadOnlyList<string>> GetMatchIdsAsync(long leagueId, CancellationToken cancellationToken = default)
+    public async Task<IReadOnlyList<long>> GetMatchIdsAsync(long leagueId, CancellationToken cancellationToken = default)
     {
         var requestUri = $"/api/leagues/{leagueId}/matchIds";
 
@@ -69,7 +69,7 @@ public class OpenDotaService : IOpenDotaService
             await EnsureSuccessStatusCode(response, $"match IDs for league {leagueId}");
 
             await using var contentStream = await response.Content.ReadAsStreamAsync(cancellationToken);
-            var matchIds = await JsonSerializer.DeserializeAsync<List<string>>(contentStream, SerializerOptions, cancellationToken);
+            var matchIds = await JsonSerializer.DeserializeAsync<List<long>>(contentStream, SerializerOptions, cancellationToken);
 
             return matchIds ?? [];
         }
