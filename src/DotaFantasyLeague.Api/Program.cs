@@ -1,6 +1,7 @@
 using System.Reflection;
 using DotaFantasyLeague.Api.Components;
 using DotaFantasyLeague.Api.Services;
+using DotaFantasyLeague.Api.Swagger;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +15,8 @@ builder.Services.AddSwaggerGen(options =>
     {
         options.IncludeXmlComments(xmlPath);
     }
+
+    options.OperationFilter<DefaultLeagueIdOperationFilter>();
 });
 builder.Services.AddHttpClient<IOpenDotaService, OpenDotaService>(client =>
 {
