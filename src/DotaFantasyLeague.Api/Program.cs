@@ -1,4 +1,5 @@
 using System.Reflection;
+using DotaFantasyLeague.Api.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +14,11 @@ builder.Services.AddSwaggerGen(options =>
         options.IncludeXmlComments(xmlPath);
     }
 });
+builder.Services.AddHttpClient<IOpenDotaLeagueService, OpenDotaLeagueService>(client =>
+{
+    client.BaseAddress = new Uri("https://api.opendota.com");
+});
+
 builder.Services.AddControllers();
 
 var app = builder.Build();
