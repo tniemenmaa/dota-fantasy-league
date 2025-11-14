@@ -22,6 +22,10 @@ builder.Services.AddHttpClient<IOpenDotaMatchesService, OpenDotaMatchesService>(
 {
     client.BaseAddress = new Uri("https://api.opendota.com");
 });
+builder.Services.AddHttpClient<IOpenDotaTeamsService, OpenDotaTeamsService>(client =>
+{
+    client.BaseAddress = new Uri("https://api.opendota.com");
+});
 
 builder.Services.AddControllers();
 
