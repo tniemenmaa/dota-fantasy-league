@@ -21,3 +21,6 @@ jobs:
 
       - name: Build
         run: dotnet build DotaFantasyLeague.sln --configuration Release --no-restore
+
+      - name: Run integration tests
+        run: dotnet test tests/DotaFantasyLeague.Api.IntegrationTests/DotaFantasyLeague.Api.IntegrationTests.csproj --configuration Release --no-build --no-restore
