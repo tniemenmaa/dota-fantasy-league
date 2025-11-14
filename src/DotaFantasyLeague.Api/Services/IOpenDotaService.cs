@@ -21,7 +21,7 @@ public interface IOpenDotaService
     /// <param name="leagueId">The league identifier to filter match identifiers.</param>
     /// <param name="cancellationToken">Token used to cancel the request.</param>
     /// <returns>A collection of match identifiers returned by the OpenDota API.</returns>
-    Task<IReadOnlyList<string>> GetMatchIdsAsync(long leagueId, CancellationToken cancellationToken = default);
+    Task<IReadOnlyList<long>> GetMatchIdsAsync(long leagueId, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Retrieves the details for a match with the provided identifier.

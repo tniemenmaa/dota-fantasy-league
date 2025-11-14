@@ -46,7 +46,7 @@ public class LeaguesController : ControllerBase
     [HttpGet("{leagueId:long}/matchIds")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<IReadOnlyList<string>>> GetMatchIds(long leagueId, CancellationToken cancellationToken)
+    public async Task<ActionResult<IReadOnlyList<long>>> GetMatchIds(long leagueId, CancellationToken cancellationToken)
     {
         var matchIds = await _openDotaService.GetMatchIdsAsync(leagueId, cancellationToken);
         return Ok(matchIds);
