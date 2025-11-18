@@ -338,7 +338,7 @@ public class MatchDraftTiming
     /// Gets or sets the player slot responsible for the event.
     /// </summary>
     [JsonPropertyName("player_slot")]
-    public int PlayerSlot { get; set; }
+    public int? PlayerSlot { get; set; }
 
     /// <summary>
     /// Gets or sets the total time taken by the team when the event occurred.
@@ -389,6 +389,12 @@ public class MatchPlayer
     public int Kills { get; set; }
 
     /// <summary>
+    /// Gets or sets the number of first blood claims for the player.
+    /// </summary>
+    [JsonPropertyName("firstblood_claimed")]
+    public int FirstbloodClaimed { get; set; }
+
+    /// <summary>
     /// Gets or sets the number of deaths for the player.
     /// </summary>
     [JsonPropertyName("deaths")]
@@ -417,6 +423,54 @@ public class MatchPlayer
     /// </summary>
     [JsonPropertyName("tower_damage")]
     public int TowerDamage { get; set; }
+    
+    /// <summary>
+    /// Gets or sets teh amount of towers killed by the player.
+    /// </summary>
+    [JsonPropertyName("towers_killed")]
+    public int TowersKilled { get; set; }
+    
+    /// <summary>
+    /// Gets or sets the amount of Roshans killed by the player.
+    /// </summary>
+    [JsonPropertyName("roshans_killed")]
+    public int RoshansKilled { get; set; }
+    
+    /// <summary>
+    /// Gets or sets the percentage of teamfight participation for the player.
+    /// </summary>
+    [JsonPropertyName("teamfight_participation")]
+    public float TeamFightParticipation { get; set; }
+
+    /// <summary>
+    /// Gets or sets the number of observer wards placed by the player.
+    /// </summary>
+    [JsonPropertyName("obs_placed")]
+    public int ObserverWardsPlaced { get; set; }
+    
+    /// <summary>
+    /// Gets or sets the number of sentry wards placed by the player.
+    /// </summary>
+    [JsonPropertyName("sen_placed")]
+    public int SentryWardsPlaced { get; set; }
+
+    /// <summary>
+    /// Gets or sets the number of camps stacked by the player.
+    /// </summary>
+    [JsonPropertyName("camps_stacked")]
+    public int CampsStacked { get; set; }
+
+    /// <summary>
+    /// Gets or sets the number of runes picked up by the player.
+    /// </summary>
+    [JsonPropertyName("rune_pickups")]
+    public int RunesPickedUp { get; set; }
+
+    /// <summary>
+    /// Gets or sets the duration of stuns performed by the player.
+    /// </summary>
+    [JsonPropertyName("stuns")]
+    public float Stuns { get; set; }
 
     /// <summary>
     /// Gets or sets the amount of hero healing performed by the player.
@@ -470,7 +524,7 @@ public class MatchPlayer
     /// Gets or sets the amount of damage taken by the player.
     /// </summary>
     [JsonPropertyName("damage_taken")]
-    public int? DamageTaken { get; set; }
+    public IReadOnlyDictionary<string, int> DamageTaken { get; set; } = new Dictionary<string, int>();
 
     /// <summary>
     /// Gets or sets the array of ability upgrades for the player.
@@ -489,4 +543,32 @@ public class MatchPlayer
     /// </summary>
     [JsonExtensionData]
     public Dictionary<string, JsonElement>? AdditionalProperties { get; set; }
+
+    [JsonPropertyName("fantasy_points")]
+    public float FantasyPoints {
+        get
+        {
+            return CalculateFantasyPoints();
+        }
+    }
+
+    private float CalculateFantasyPoints()
+    {
+        float points = 0f;
+        points += Kills * 0.3f;
+        points -= 3 - (Deaths * 0.3f);
+        points += Assists * 0.15f;
+        points += LastHits * 0.003f;
+        points += GoldPerMinute * 0.002f;
+        points += TowersKilled * 1f;
+        points += RoshansKilled * 1f;
+        points += TeamFightParticipation * 3f;
+        points += ObserverWardsPlaced * 0.5f;
+        points += SentryWardsPlaced * 0.5f;
+        points += CampsStacked * 0.5f;
+        points += RunesPickedUp * 0.25f;
+        points += FirstbloodClaimed * 4f;
+        points += Stuns * 0.05f;
+        return points;
+    }
 }
