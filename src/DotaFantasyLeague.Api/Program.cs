@@ -47,6 +47,8 @@ app.UseStaticFiles();
 
 app.UseAuthorization();
 
+app.UseAntiforgery();
+
 app.MapControllers();
 
 app.MapRazorComponents<App>()
