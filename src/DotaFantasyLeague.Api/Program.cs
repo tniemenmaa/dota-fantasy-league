@@ -24,6 +24,11 @@ builder.Services.AddHttpClient<IOpenDotaService, OpenDotaService>(client =>
     client.BaseAddress = new Uri("https://api.opendota.com");
 });
 
+builder.Services.AddHttpClient<IStratzGraphQlService, StratzGraphQlService>(client =>
+{
+    client.BaseAddress = new Uri("https://api.stratz.com/graphql");
+});
+
 builder.Services.AddHttpClient("SteamOpenId", client =>
 {
     client.BaseAddress = new Uri("https://steamcommunity.com");

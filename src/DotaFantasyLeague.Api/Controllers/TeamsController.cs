@@ -12,14 +12,38 @@ namespace DotaFantasyLeague.Api.Controllers;
 public class TeamsController : ControllerBase
 {
     private readonly IOpenDotaService _openDotaService;
+    private readonly IStratzGraphQlService _stratzGraphQlService;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="TeamsController"/> class.
     /// </summary>
     /// <param name="openDotaService">Service used to retrieve team information.</param>
-    public TeamsController(IOpenDotaService openDotaService)
+    /// <param name="stratzGraphQlService">Service used to retrieve team rosters from Stratz.</param>
+    public TeamsController(IOpenDotaService openDotaService, IStratzGraphQlService stratzGraphQlService)
     {
         _openDotaService = openDotaService;
+        _stratzGraphQlService = stratzGraphQlService;
+    }
+
+    /// <summary>
+    /// Retrieves the metadata and roster for the provided team identifier via Stratz GraphQL.
+    /// </summary>
+    /// <param name="teamId">Identifier of the team.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    [HttpGet("{teamId:long}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult<TeamDetails>> GetTeam(long teamId, CancellationToken cancellationToken)
+    {
+        var team = await _stratzGraphQlService.GetTeamAsync(teamId, cancellationToken);
+
+        if (team is null)
+        {
+            return NotFound();
+        }
+
+        return Ok(team);
     }
 
     /// <summary>
