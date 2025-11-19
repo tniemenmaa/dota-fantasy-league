@@ -68,7 +68,7 @@ public class AuthController : ControllerBase
         string? redirectTarget;
         try
         {
-            redirectTarget = _stateProtector.Unprotect(stateValues);
+            redirectTarget = _stateProtector.Unprotect(stateValues!);
         }
         catch (Exception exception)
         {
