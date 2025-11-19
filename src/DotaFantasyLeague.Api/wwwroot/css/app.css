@@ -125,6 +125,10 @@ p {
     align-items: center;
 }
 
+.gap-2 {
+    gap: 0.5rem;
+}
+
 .fw-semibold {
     font-weight: 600;
 }
@@ -135,4 +139,49 @@ p {
 
 .h5 {
     font-size: 1.1rem;
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.55rem 1rem;
+    border-radius: 999px;
+    font-weight: 600;
+    text-decoration: none;
+    border: 1px solid transparent;
+    transition: transform 120ms ease, box-shadow 120ms ease, background-color 120ms ease;
+}
+
+.btn:hover,
+.btn:focus-visible {
+    transform: translateY(-1px);
+    box-shadow: 0 12px 24px -12px rgba(0, 0, 0, 0.6);
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #f97316, #fb923c);
+    color: #0b1220;
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+.btn-primary:hover,
+.btn-primary:focus-visible {
+    background: linear-gradient(135deg, #fb923c, #fdba74);
+}
+
+.btn-ghost {
+    color: #e2e8f0;
+    border-color: rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.04);
+}
+
+.btn-ghost:hover,
+.btn-ghost:focus-visible {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.user-label {
+    color: rgba(226, 232, 240, 0.85);
+    font-weight: 600;
 }

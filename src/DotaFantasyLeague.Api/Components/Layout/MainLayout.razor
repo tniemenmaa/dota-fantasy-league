@@ -8,6 +8,17 @@
     <header class="app-header">
         <div class="container d-flex justify-content-between align-items-center py-3">
             <a class="app-brand" href="/">Dota Fantasy League</a>
+            <AuthorizeView Context="authContext">
+                <Authorized>
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="user-label">Signed in as @authContext.User.Identity?.Name</span>
+                        <a class="btn btn-ghost" href="/auth/signout">Sign out</a>
+                    </div>
+                </Authorized>
+                <NotAuthorized>
+                    <a class="btn btn-primary" href="/auth/signin/steam">Sign in with Steam</a>
+                </NotAuthorized>
+            </AuthorizeView>
         </div>
     </header>
 
