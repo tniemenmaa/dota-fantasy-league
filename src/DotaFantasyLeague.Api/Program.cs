@@ -1,8 +1,12 @@
 using System.Reflection;
 using DotaFantasyLeague.Api.Components;
+using DotaFantasyLeague.Api.Configuration;
+using DotaFantasyLeague.Api.Data;
 using DotaFantasyLeague.Api.Services;
 using DotaFantasyLeague.Api.Swagger;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -60,7 +64,32 @@ builder.Services.AddRazorComponents()
 
 builder.Services.AddControllers();
 
+var healthChecks = builder.Services.AddHealthChecks();
+healthChecks.AddCheck("self", () => HealthCheckResult.Healthy());
+
+builder.Services.Configure<CosmosDbOptions>(builder.Configuration.GetSection(CosmosDbOptions.SectionName));
+
+var cosmosDbOptions = builder.Configuration.GetSection(CosmosDbOptions.SectionName).Get<CosmosDbOptions>();
+if (cosmosDbOptions?.IsConfigured == true)
+{
+    builder.Services.AddDbContext<DotaFantasyLeagueDbContext>(options =>
+    {
+        options.UseCosmos(cosmosDbOptions.AccountEndpoint!, cosmosDbOptions.AccountKey!, cosmosDbOptions.DatabaseName!);
+    });
+
+    healthChecks.AddDbContextCheck<DotaFantasyLeagueDbContext>("cosmos-db");
+}
+
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetService<DotaFantasyLeagueDbContext>();
+    if (dbContext is not null)
+    {
+        await dbContext.Database.EnsureCreatedAsync();
+    }
+}
 
 if (app.Environment.IsDevelopment())
 {
@@ -84,10 +113,12 @@ app.UseAntiforgery();
 
 app.MapControllers();
 
+app.MapHealthChecks("/healthz");
+
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
 
-app.Run();
+await app.RunAsync();
 
 public partial class Program
 {

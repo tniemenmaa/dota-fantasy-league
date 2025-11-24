@@ -37,6 +37,37 @@ src/
 
 4. Navigate to `https://localhost:7261/swagger` to explore the interactive API documentation.
 
+## Running with Azure Cosmos DB locally
+
+The API can be configured to persist data to Azure Cosmos DB through Entity Framework Core. A Docker Compose file is included to spin up the Linux Cosmos DB emulator quickly.
+
+1. Start the emulator:
+
+   ```bash
+   docker compose -f docker-compose.cosmosdb.yml up -d
+   ```
+
+2. Trust the emulator's TLS certificate so the .NET SDK can connect over HTTPS:
+
+   ```bash
+   mkdir -p ./certs
+   curl -k https://localhost:8081/_explorer/emulator.pem -o ./certs/cosmos-emulator.crt
+   sudo cp ./certs/cosmos-emulator.crt /usr/local/share/ca-certificates/
+   sudo update-ca-certificates
+   ```
+
+3. The default `appsettings.Development.json` already points the API at the local emulator using the emulator master key. To use a different database name or a real Cosmos DB account, update the `CosmosDb` section of `appsettings.json` (or user secrets/environment variables in production):
+
+   ```json
+   "CosmosDb": {
+     "AccountEndpoint": "https://localhost:8081/",
+     "AccountKey": "C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5mYQ=",
+     "DatabaseName": "DotaFantasyLeague"
+   }
+   ```
+
+4. Run the API as normal. On startup the database will be created automatically if the Cosmos DB configuration is present.
+
 ## Next steps
 
 * Add domain-specific endpoints, services, and persistence layers under the `src` directory.
