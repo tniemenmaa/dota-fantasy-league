@@ -27,6 +27,8 @@ builder.Services.AddHttpClient<IOpenDotaService, OpenDotaService>(client =>
 builder.Services.AddHttpClient<IStratzGraphQlService, StratzGraphQlService>(client =>
 {
     client.BaseAddress = new Uri("https://api.stratz.com/graphql");
+    client.DefaultRequestHeaders.Add("User-Agent", "STRATZ_API");
+    client.DefaultRequestHeaders.Add("Authorization", "Bearer " + builder.Configuration["Stratz:ApiToken"]);
 });
 
 builder.Services.AddHttpClient("SteamOpenId", client =>

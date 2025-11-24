@@ -11,17 +11,12 @@ public sealed class TeamDetails
     /// <summary>
     /// Gets or sets the unique identifier of the team.
     /// </summary>
-    public long TeamId { get; set; }
+    public long Id { get; set; }
 
     /// <summary>
     /// Gets or sets the display name of the team.
     /// </summary>
     public string? Name { get; set; }
-
-    /// <summary>
-    /// Gets or sets the short tag for the team.
-    /// </summary>
-    public string? Tag { get; set; }
 
     /// <summary>
     /// Gets or sets the roster for the team.
@@ -34,31 +29,6 @@ public sealed class TeamDetails
 /// </summary>
 public sealed class TeamMember
 {
-    public long PlayerId { get; set; }
-
-    public string? Name { get; set; }
-
-    public bool IsActive { get; set; }
-
-    public string? Role { get; set; }
-
-    public string? Rank { get; set; }
-
-    public DateTimeOffset? StartDateTime { get; set; }
-
-    public DateTimeOffset? EndDateTime { get; set; }
-
-    public TeamMemberSteamAccount? SteamAccount { get; set; }
-}
-
-/// <summary>
-/// Contains details about the professional Steam account associated with a team member.
-/// </summary>
-public sealed class TeamMemberSteamAccount
-{
-    public long? SteamAccountId { get; set; }
-
-    public string? Name { get; set; }
-
-    public string? RealName { get; set; }
+    public required long PlayerId { get; set; }
+    public required string Name { get; set; }
 }

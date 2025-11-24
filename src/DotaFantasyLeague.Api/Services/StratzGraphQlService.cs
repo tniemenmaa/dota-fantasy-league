@@ -13,23 +13,21 @@ namespace DotaFantasyLeague.Api.Services;
 public class StratzGraphQlService : IStratzGraphQlService
 {
     private const string TeamMembersQuery = """
-        query TeamMembers($teamId: Long!) {
+        query GetTeam($teamId: Int!)
+        {
           team(teamId: $teamId) {
-            teamId
+            id
             name
-            tag
+            leagues {
+              id
+              displayName
+            }
             members {
-              playerId
-              name
-              isActive
-              role
-              rank
-              startDateTime
-              endDateTime
-              proSteamAccount {
-                steamAccountId
-                name
-                realName
+              player {
+                steamAccount {
+                  name
+                  id
+                }
               }
             }
           }
@@ -121,7 +119,7 @@ public class StratzGraphQlService : IStratzGraphQlService
 
     private sealed record TeamResult
     {
-        public long TeamId { get; init; }
+        public long Id { get; init; }
 
         public string? Name { get; init; }
 
@@ -133,9 +131,8 @@ public class StratzGraphQlService : IStratzGraphQlService
         {
             return new TeamDetails
             {
-                TeamId = TeamId,
+                Id = Id,
                 Name = Name,
-                Tag = Tag,
                 Members = (Members ?? Array.Empty<TeamMemberResult>())
                     .Select(member => member.ToModel())
                     .ToList()
@@ -145,54 +142,27 @@ public class StratzGraphQlService : IStratzGraphQlService
 
     private sealed record TeamMemberResult
     {
-        public long PlayerId { get; init; }
-
-        public string? Name { get; init; }
-
-        public bool IsActive { get; init; }
-
-        public string? Role { get; init; }
-
-        public string? Rank { get; init; }
-
-        public DateTimeOffset? StartDateTime { get; init; }
-
-        public DateTimeOffset? EndDateTime { get; init; }
-
-        public ProSteamAccountResult? ProSteamAccount { get; init; }
-
+        public required TeamPlayerResult Player { get; init; }
+     
         public TeamMember ToModel()
         {
             return new TeamMember
             {
-                PlayerId = PlayerId,
-                Name = Name,
-                IsActive = IsActive,
-                Role = Role,
-                Rank = Rank,
-                StartDateTime = StartDateTime,
-                EndDateTime = EndDateTime,
-                SteamAccount = ProSteamAccount?.ToModel()
+                PlayerId = Player.SteamAccount.Id,
+                Name = Player.SteamAccount.Name
             };
         }
     }
 
-    private sealed record ProSteamAccountResult
+    private sealed record TeamPlayerResult
     {
-        public long? SteamAccountId { get; init; }
+        public required SteamAccountResult SteamAccount { get; init; }
+        public required int MatchCount { get; init; }
+    }
 
-        public string? Name { get; init; }
-
-        public string? RealName { get; init; }
-
-        public TeamMemberSteamAccount ToModel()
-        {
-            return new TeamMemberSteamAccount
-            {
-                SteamAccountId = SteamAccountId,
-                Name = Name,
-                RealName = RealName
-            };
-        }
+    public sealed record SteamAccountResult
+    {
+        public int Id { get; set; }
+        public required string Name { get; set; }
     }
 }
