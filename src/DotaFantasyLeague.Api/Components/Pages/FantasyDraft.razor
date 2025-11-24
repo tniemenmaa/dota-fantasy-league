@@ -1,0 +1,227 @@
+@page "/fantasy-draft"
+
+<PageTitle>Fantasy Draft</PageTitle>
+
+<section class="container py-5">
+    <header class="section-header mb-4">
+        <p class="eyebrow">Fantasy Tools</p>
+        <h1 class="display-5 fw-semibold mb-2">Build your fantasy draft</h1>
+        <p class="lead text-muted">Pick a balanced mix of support and core players to round out your roster.</p>
+    </header>
+
+    <div class="draft-status mb-4">
+        <div>
+            <span class="badge">Support slots</span>
+            <strong>@SelectedSupportIds.Count</strong>/<span>@SupportSlots</span>
+        </div>
+        <div>
+            <span class="badge">Core slots</span>
+            <strong>@SelectedCoreIds.Count</strong>/<span>@CoreSlots</span>
+        </div>
+        <div class="draft-ready @(IsDraftComplete ? "ready" : string.Empty)">
+            @if (IsDraftComplete)
+            {
+                <span class="status-dot"></span>
+                <span>Your draft is ready to lock in!</span>
+            }
+            else
+            {
+                <span class="status-dot pending"></span>
+                <span>Select @MissingSlots more @(MissingSlots == 1 ? "player" : "players") to complete your draft.</span>
+            }
+        </div>
+    </div>
+
+    <div class="draft-grid">
+        <section class="draft-column">
+            <header class="column-header">
+                <p class="eyebrow">Support players</p>
+                <h2 class="h4 mb-1">Utility &amp; vision specialists</h2>
+                <p class="text-muted">Pick two players who excel at lane stability, vision, and saving teammates.</p>
+            </header>
+
+            <div class="player-grid">
+                @foreach (var player in SupportPlayers)
+                {
+                    <article class="player-card @(IsSupportSelected(player) ? "selected" : string.Empty)">
+                        <div class="card-meta">
+                            <span class="role">Support</span>
+                            <span class="team">@player.Team</span>
+                        </div>
+                        <h3>@player.Name</h3>
+                        <p class="text-muted">@player.SignatureStyle</p>
+
+                        <div class="card-actions">
+                            <button class="btn btn-ghost" @onclick="() => ToggleSupport(player)" disabled="@(IsSupportSelectionLockedOut(player))">
+                                @(IsSupportSelected(player) ? "Remove" : "Select")
+                            </button>
+                            <span class="badge">@player.Region</span>
+                        </div>
+                    </article>
+                }
+            </div>
+        </section>
+
+        <section class="draft-column">
+            <header class="column-header">
+                <p class="eyebrow">Core players</p>
+                <h2 class="h4 mb-1">Playmakers &amp; damage dealers</h2>
+                <p class="text-muted">Pick three players who can farm efficiently and close out games.</p>
+            </header>
+
+            <div class="player-grid">
+                @foreach (var player in CorePlayers)
+                {
+                    <article class="player-card @(IsCoreSelected(player) ? "selected" : string.Empty)">
+                        <div class="card-meta">
+                            <span class="role">Core</span>
+                            <span class="team">@player.Team</span>
+                        </div>
+                        <h3>@player.Name</h3>
+                        <p class="text-muted">@player.SignatureStyle</p>
+
+                        <div class="card-actions">
+                            <button class="btn btn-ghost" @onclick="() => ToggleCore(player)" disabled="@(IsCoreSelectionLockedOut(player))">
+                                @(IsCoreSelected(player) ? "Remove" : "Select")
+                            </button>
+                            <span class="badge">@player.Region</span>
+                        </div>
+                    </article>
+                }
+            </div>
+        </section>
+    </div>
+
+    <section class="draft-summary">
+        <header class="column-header">
+            <p class="eyebrow">Your draft board</p>
+            <h2 class="h4 mb-1">See your current picks</h2>
+            <p class="text-muted">You can swap players anytime until both role categories are filled.</p>
+        </header>
+
+        <div class="draft-board">
+            <div>
+                <h3 class="h5">Support picks (@SelectedSupportIds.Count/@SupportSlots)</h3>
+                <ul>
+                    @foreach (var player in SelectedSupport)
+                    {
+                        <li>
+                            <span class="pill">@player.Name</span>
+                            <small class="text-muted">@player.Team</small>
+                        </li>
+                    }
+                    @if (!SelectedSupport.Any())
+                    {
+                        <li class="placeholder">No support players selected yet.</li>
+                    }
+                </ul>
+            </div>
+            <div>
+                <h3 class="h5">Core picks (@SelectedCoreIds.Count/@CoreSlots)</h3>
+                <ul>
+                    @foreach (var player in SelectedCore)
+                    {
+                        <li>
+                            <span class="pill">@player.Name</span>
+                            <small class="text-muted">@player.Team</small>
+                        </li>
+                    }
+                    @if (!SelectedCore.Any())
+                    {
+                        <li class="placeholder">No core players selected yet.</li>
+                    }
+                </ul>
+            </div>
+        </div>
+
+        @if (!string.IsNullOrWhiteSpace(StatusMessage))
+        {
+            <div class="status-toast">
+                @StatusMessage
+            </div>
+        }
+    </section>
+</section>
+
+@code {
+    private const int SupportSlots = 2;
+    private const int CoreSlots = 3;
+
+    private readonly IReadOnlyList<FantasyPlayer> SupportPlayers = new List<FantasyPlayer>
+    {
+        new("KuroKy", "Nigma Galaxy", "Defensive saves & map control", "Europe"),
+        new("Dy", "Xtreme Gaming", "Teamfight vision & aggressive rotations", "China"),
+        new("Sneyking", "Tundra Esports", "Lane pressure & clutch disengages", "North America"),
+        new("Puppey", "Team Secret", "Draft leadership & macro calls", "Europe"),
+        new("Whitemon", "Talon Esports", "Roaming support with kill setup", "Southeast Asia")
+    };
+
+    private readonly IReadOnlyList<FantasyPlayer> CorePlayers = new List<FantasyPlayer>
+    {
+        new("Nisha", "Team Liquid", "Tempo mid with high damage output", "Europe"),
+        new("Arteezy", "Shopify Rebellion", "Reliable farming carry", "North America"),
+        new("Ame", "LGD Gaming", "Late game closer with strong positioning", "China"),
+        new("Yopaj", "Bleed Esports", "Explosive mid-game playmaker", "Southeast Asia"),
+        new("skiter", "Tundra Esports", "Teamfight focused carry", "Europe"),
+        new("Ana", "T1", "High impact core with clutch buybacks", "Southeast Asia")
+    };
+
+    private readonly HashSet<string> SelectedSupportIds = new();
+    private readonly HashSet<string> SelectedCoreIds = new();
+    private string? StatusMessage { get; set; }
+
+    private IEnumerable<FantasyPlayer> SelectedSupport => SupportPlayers.Where(p => SelectedSupportIds.Contains(p.Id));
+    private IEnumerable<FantasyPlayer> SelectedCore => CorePlayers.Where(p => SelectedCoreIds.Contains(p.Id));
+
+    private bool IsDraftComplete => SelectedSupportIds.Count == SupportSlots && SelectedCoreIds.Count == CoreSlots;
+    private int MissingSlots => (SupportSlots - SelectedSupportIds.Count) + (CoreSlots - SelectedCoreIds.Count);
+
+    private void ToggleSupport(FantasyPlayer player)
+    {
+        if (SelectedSupportIds.Contains(player.Id))
+        {
+            SelectedSupportIds.Remove(player.Id);
+            StatusMessage = $"{player.Name} removed from your support picks.";
+            return;
+        }
+
+        if (SelectedSupportIds.Count >= SupportSlots)
+        {
+            StatusMessage = $"You can only pick {SupportSlots} support players.";
+            return;
+        }
+
+        SelectedSupportIds.Add(player.Id);
+        StatusMessage = $"{player.Name} added as a support player.";
+    }
+
+    private void ToggleCore(FantasyPlayer player)
+    {
+        if (SelectedCoreIds.Contains(player.Id))
+        {
+            SelectedCoreIds.Remove(player.Id);
+            StatusMessage = $"{player.Name} removed from your core picks.";
+            return;
+        }
+
+        if (SelectedCoreIds.Count >= CoreSlots)
+        {
+            StatusMessage = $"You can only pick {CoreSlots} core players.";
+            return;
+        }
+
+        SelectedCoreIds.Add(player.Id);
+        StatusMessage = $"{player.Name} added as a core player.";
+    }
+
+    private bool IsSupportSelected(FantasyPlayer player) => SelectedSupportIds.Contains(player.Id);
+    private bool IsCoreSelected(FantasyPlayer player) => SelectedCoreIds.Contains(player.Id);
+
+    private bool IsSupportSelectionLockedOut(FantasyPlayer player) => !IsSupportSelected(player) && SelectedSupportIds.Count >= SupportSlots;
+    private bool IsCoreSelectionLockedOut(FantasyPlayer player) => !IsCoreSelected(player) && SelectedCoreIds.Count >= CoreSlots;
+
+    private record FantasyPlayer(string Name, string Team, string SignatureStyle, string Region)
+    {
+        public string Id { get; } = $"{Name}-{Team}";
+    }
+}

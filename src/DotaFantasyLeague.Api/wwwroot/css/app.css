@@ -37,6 +37,24 @@ body {
     text-decoration: underline;
 }
 
+.nav-links {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.nav-link {
+    color: rgba(226, 232, 240, 0.85);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.nav-link:hover,
+.nav-link:focus-visible {
+    color: #fef08a;
+    text-decoration: underline;
+}
+
 .app-content {
     flex: 1;
 }
@@ -184,4 +202,187 @@ p {
 .user-label {
     color: rgba(226, 232, 240, 0.85);
     font-weight: 600;
+}
+
+.section-header .eyebrow,
+.column-header .eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #f97316;
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+}
+
+.h4 {
+    font-size: 1.25rem;
+}
+
+.draft-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.draft-column {
+    background: rgba(15, 23, 42, 0.65);
+    border: 1px solid rgba(148, 163, 184, 0.12);
+    border-radius: 1rem;
+    padding: 1.25rem;
+    box-shadow: 0 18px 40px -20px rgba(15, 23, 42, 0.9);
+}
+
+.player-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1rem;
+}
+
+.player-card {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(148, 163, 184, 0.16);
+    border-radius: 0.85rem;
+    padding: 1rem;
+    transition: border-color 120ms ease, transform 120ms ease, box-shadow 120ms ease;
+}
+
+.player-card:hover,
+.player-card:focus-within {
+    border-color: rgba(251, 146, 60, 0.7);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 30px -18px rgba(0, 0, 0, 0.5);
+}
+
+.player-card.selected {
+    border-color: rgba(74, 222, 128, 0.7);
+    background: linear-gradient(135deg, rgba(34, 197, 94, 0.08), rgba(15, 23, 42, 0.75));
+}
+
+.card-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.9rem;
+    margin-bottom: 0.35rem;
+    color: rgba(148, 163, 184, 0.9);
+}
+
+.role {
+    color: #fef08a;
+    font-weight: 700;
+}
+
+.team {
+    font-weight: 600;
+}
+
+.card-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 0.75rem;
+}
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.3rem 0.75rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.08);
+    color: rgba(226, 232, 240, 0.9);
+    font-weight: 600;
+    border: 1px solid rgba(148, 163, 184, 0.3);
+    font-size: 0.9rem;
+}
+
+.draft-status {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+    background: rgba(15, 23, 42, 0.65);
+    border: 1px solid rgba(148, 163, 184, 0.18);
+    border-radius: 1rem;
+    padding: 1rem 1.25rem;
+}
+
+.draft-ready {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: rgba(226, 232, 240, 0.85);
+}
+
+.draft-ready.ready {
+    color: #bbf7d0;
+}
+
+.status-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 999px;
+    background: #22c55e;
+    display: inline-block;
+    box-shadow: 0 0 0 6px rgba(34, 197, 94, 0.12);
+}
+
+.status-dot.pending {
+    background: #f59e0b;
+    box-shadow: 0 0 0 6px rgba(245, 158, 11, 0.12);
+}
+
+.draft-summary {
+    background: rgba(15, 23, 42, 0.65);
+    border: 1px solid rgba(148, 163, 184, 0.18);
+    border-radius: 1rem;
+    padding: 1.25rem;
+}
+
+.draft-board {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1rem;
+}
+
+.draft-board ul {
+    list-style: none;
+    padding-left: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.draft-board li {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.pill {
+    display: inline-block;
+    padding: 0.35rem 0.75rem;
+    background: rgba(59, 130, 246, 0.15);
+    border: 1px solid rgba(59, 130, 246, 0.4);
+    color: #bfdbfe;
+    border-radius: 999px;
+    font-weight: 700;
+}
+
+.placeholder {
+    color: rgba(148, 163, 184, 0.65);
+}
+
+.status-toast {
+    margin-top: 1rem;
+    padding: 0.75rem 1rem;
+    background: rgba(15, 23, 42, 0.8);
+    border: 1px solid rgba(148, 163, 184, 0.3);
+    border-radius: 0.75rem;
+    color: rgba(226, 232, 240, 0.9);
+}
+
+@media (max-width: 640px) {
+    .nav-links {
+        display: none;
+    }
 }
