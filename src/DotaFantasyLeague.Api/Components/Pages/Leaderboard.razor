@@ -1,0 +1,147 @@
+@page "/leaderboard"
+
+<PageTitle>Fantasy Draft Leaderboard</PageTitle>
+
+<section class="page-hero">
+    <div class="container py-5">
+        <p class="eyebrow">Fantasy Draft</p>
+        <h1 class="display-5 fw-semibold mb-3">Leaderboard</h1>
+        <p class="lead mb-4">
+            Track how fantasy managers are performing across the season. Points update as new series conclude,
+            rewarding smart drafting, captains, and clutch performances.
+        </p>
+        <div class="d-flex gap-2">
+            <a class="btn btn-primary" href="/auth/signin/steam">Join the competition</a>
+            <a class="btn btn-ghost" href="/">Back to overview</a>
+        </div>
+    </div>
+</section>
+
+<section class="container py-5">
+    <div class="stat-grid">
+        <article class="stat-card">
+            <p class="stat-label">Managers competing</p>
+            <p class="stat-value">@TotalManagers</p>
+            <p class="stat-sub">Across global scrims and official series</p>
+        </article>
+        <article class="stat-card">
+            <p class="stat-label">Average points</p>
+            <p class="stat-value">@AveragePoints.ToString("0.0")</p>
+            <p class="stat-sub">Steady climbs are beating risky rolls</p>
+        </article>
+        <article class="stat-card">
+            <p class="stat-label">Current streak</p>
+            <p class="stat-value">@HotStreak.Manager</p>
+            <p class="stat-sub">@($"Won {HotStreak.Streak} in a row")</p>
+        </article>
+        <article class="stat-card">
+            <p class="stat-label">Top captain</p>
+            <p class="stat-value">@TopCaptain.TopPerformer</p>
+            <p class="stat-sub">Anchoring @TopCaptain.TeamName</p>
+        </article>
+    </div>
+
+    <div class="leaderboard-panel">
+        <header class="panel-header">
+            <div>
+                <p class="eyebrow">Week 5 standings</p>
+                <h2 class="h4 mb-0">Projected playoff seeding</h2>
+            </div>
+            <span class="badge badge-pill">Auto-refresh every series</span>
+        </header>
+
+        <div class="table-wrapper">
+            <table class="leaderboard-table">
+                <thead>
+                    <tr>
+                        <th scope="col">Rank</th>
+                        <th scope="col">Manager</th>
+                        <th scope="col">Fantasy team</th>
+                        <th scope="col">Record</th>
+                        <th scope="col">Captain</th>
+                        <th scope="col">Top performer</th>
+                        <th scope="col">Points</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        var rank = 1;
+                    }
+                    @foreach (var entry in OrderedLeaderboard)
+                    {
+                        <tr>
+                            <td>
+                                <span class="badge badge-rank">#@rank</span>
+                            </td>
+                            <td>
+                                <div class="cell-title">@entry.Manager</div>
+                                <div class="cell-sub">@entry.Region</div>
+                            </td>
+                            <td>
+                                <div class="cell-title">@entry.TeamName</div>
+                                <div class="cell-sub">Roster rating @entry.RosterScore</div>
+                            </td>
+                            <td>
+                                <div class="cell-title">@entry.Wins - @entry.Losses</div>
+                                <div class="cell-sub streak">@entry.StreakLabel</div>
+                            </td>
+                            <td>
+                                <div class="cell-title">@entry.Captain</div>
+                                <div class="cell-sub">@entry.CaptainRole</div>
+                            </td>
+                            <td>
+                                <div class="cell-title">@entry.TopPerformer</div>
+                                <div class="cell-sub">@entry.TopLine</div>
+                            </td>
+                            <td class="points">@entry.Points</td>
+                        </tr>
+                        rank++;
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+@code {
+    private static readonly IReadOnlyList<LeaderboardEntry> Leaderboard =
+    [
+        new("Aria Tan", "Radiant Ravens", 1480, 12, 3, 5, "Yatoro", "Carry", "Nine", "34 KDA vs Falcons", "SEA"),
+        new("Victor Hale", "Dire Dominion", 1425, 11, 4, 4, "SumaiL", "Mid", "Sneyking", "83% win on Enchantress", "EU"),
+        new("Lena Costa", "Ancient Apex", 1370, 10, 5, 3, "Cr1t-", "Support", "Jabz", "Lane bully specialist", "SA"),
+        new("Marcus Li", "Creeps & Coffee", 1310, 9, 6, 2, "Nisha", "Mid", "Ame", "52 fantasy per game", "CN"),
+        new("Priya Dev", "Roshan Rush", 1265, 9, 6, 4, "Collapse", "Offlane", "Kaka", "Ward uptime leader", "SEA"),
+        new("Samir Khan", "Ancient Pullers", 1180, 8, 7, 2, "Topson", "Mid", "Skiter", "Highground defense MVP", "EU"),
+        new("Noelle Brooks", "Rune Raiders", 1125, 7, 8, 1, "dy", "Support", "ATF", "First blood magnet", "NA"),
+    ];
+
+    private IEnumerable<LeaderboardEntry> OrderedLeaderboard => Leaderboard
+        .OrderByDescending(entry => entry.Points)
+        .ThenByDescending(entry => entry.Wins);
+
+    private int TotalManagers => Leaderboard.Count;
+
+    private double AveragePoints => Leaderboard.Average(entry => entry.Points);
+
+    private LeaderboardEntry HotStreak => Leaderboard.MaxBy(entry => entry.Streak) ?? Leaderboard.First();
+
+    private LeaderboardEntry TopCaptain => Leaderboard.MaxBy(entry => entry.RosterScore) ?? Leaderboard.First();
+
+    private sealed record LeaderboardEntry(
+        string Manager,
+        string TeamName,
+        int Points,
+        int Wins,
+        int Losses,
+        int Streak,
+        string Captain,
+        string CaptainRole,
+        string TopPerformer,
+        string TopLine,
+        string Region)
+    {
+        public string StreakLabel => $"{(Streak >= 0 ? "+" : string.Empty)}{Streak} win streak";
+
+        public int RosterScore => (int)Math.Round(Points / 10.0) + (Wins * 5);
+    }
+}
